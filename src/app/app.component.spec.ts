@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'myFlix-Client-Angular'`, () => {
+  it(`should have as title 'myflix-angular-client'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('myFlix-Client-Angular');
+    expect(app.title).toEqual('myflix-angular-client');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('myFlix-Client-Angular app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('myflix-angular-client app is running!');
   });
 });
