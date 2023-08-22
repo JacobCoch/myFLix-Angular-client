@@ -18,16 +18,17 @@ import { UserRegistrationFormComponent } from './user-registration-form/user-reg
 import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
 import { MovieCardComponent } from './movie-card/movie-card.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
-import { FavoriteMoviesComponent } from './favorite-movies/favorite-movies.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { DetailsViewComponent } from './details-view/details-view.component';
 import { DirectorViewComponent } from './director-view/director-view.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { GenreViewComponent } from './genre-view/genre-view.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { FavoriteMoviesComponent } from './favorite-movies/favorite-movies.component';
 
 const appRoutes: Routes = [
   { path: 'welcome', component: WelcomePageComponent },
   { path: 'movies', component: MovieCardComponent },
+  { path: 'profile', component: UserProfileComponent },
   { path: '', redirectTo: 'welcome', pathMatch: 'prefix' },
 ];
 
@@ -63,4 +64,4 @@ const appRoutes: Routes = [
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
