@@ -1,0 +1,37 @@
+.container {
+  height: 100%;
+}
+
+.main-page {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 80px;
+  height: 100%;
+  background: url("https://gearmoose.com/wp-content/uploads/2021/06/Best-Movies-to-Watch-on-the-4th-of-July.jpg");
+  background-image: 100%;
+}
+
+h1 {
+  font-size: 72px;
+  color: rgb(206, 206, 206);
+  animation: bounce-in 1.5s ease;
+}
+
+// Keyframe animation for the heading
+@keyframes bounce-in {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  80% {
+    transform: translateY(20px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

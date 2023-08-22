@@ -16,7 +16,7 @@ const apiUrl = 'https://mymovieapidb.herokuapp.com/';
 export class FetchApiDataService {
   // Inject the HttpClient module to the constructor params.
   // This will provide HttpClient to the entire class, making it available via this.http
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
    *
@@ -71,7 +71,7 @@ export class FetchApiDataService {
   getOneGenre(genreName: string): Observable<any> {
     const token = localStorage.getItem('token');
     return this.http
-      .get(apiUrl + 'movies/genre/' + genreName, {
+      .get(apiUrl + 'movies/Genre/' + genreName, {
         headers: new HttpHeaders({
           Authorization: 'Bearer ' + token,
         }),
@@ -81,6 +81,7 @@ export class FetchApiDataService {
 
   getUser(username: string): Observable<any> {
     const token = localStorage.getItem('token');
+
     return this.http
       .get(apiUrl + 'users/' + username, {
         headers: new HttpHeaders({
@@ -90,10 +91,11 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  getFavoriteMovies(username: string): Observable<any> {
+  getFavoriteMovies(): Observable<any> {
     const token = localStorage.getItem('token');
+    const username = localStorage.getItem('user');
     return this.http
-      .get(apiUrl + 'usres/' + username, {
+      .get(apiUrl + 'users/' + username, {
         headers: new HttpHeaders({
           Authorization: 'Bearer ' + token,
         }),

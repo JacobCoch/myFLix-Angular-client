@@ -1,0 +1,89 @@
+// Define color scheme
+$color-primary: #ff8c00;
+$color-secondary: #ff4500;
+$color-text: #ffffff;
+
+.movie-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-block: 30px;
+  gap: 20px;
+  background: url("https://thumbs.dreamstime.com/b/seamless-cinema-pattern-can-be-used-wallpaper-website-background-wrapping-paper-vector-bright-film-design-movie-74251212.jpg")
+    center/cover; // Use the provided image as the background
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); // Add a subtle box shadow
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(25% - 30px);
+  flex-shrink: 0;
+  margin-bottom: 30px;
+  border: 2px solid transparent; // Remove the black border
+  background: #000000;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); // Add a subtle box shadow
+  transition: all 0.3s ease; // Smooth transition on hover
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); // Add a stronger box shadow on hover
+    border: 2px solid $color-primary; // Add a border on hover
+  }
+}
+mat-card-title {
+  font-size: 24px;
+  margin-top: 10px; // Add some space above the title
+}
+
+mat-card-subtitle {
+  font-size: 16px;
+  padding-bottom: 10px;
+  color: $color-text;
+}
+
+img {
+  height: 400px;
+  width: 275px;
+  margin: auto;
+  object-fit: cover; // Ensure the image fits inside the container without distortion
+  border-radius: 0.3rem;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center; // Align icons vertically in the center
+  margin: 10px; // Adjust margin for a cleaner look
+}
+
+button {
+  font-size: 18px;
+  color: $color-text;
+  background-color: $color-primary;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $color-secondary;
+  }
+}
+
+mat-icon {
+  font-size: 22px;
+  color: $color-primary; // Use the primary color for icons
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $color-secondary; // Use secondary color on hover
+  }
+}
+
+.fav-icon {
+  color: $color-secondary; // Use secondary color for favorite icon
+}
