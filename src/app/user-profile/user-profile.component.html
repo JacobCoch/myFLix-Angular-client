@@ -1,1 +1,72 @@
-<p>user-profile works!</p>
+<app-nav-bar></app-nav-bar>
+<div class="profile-page">
+  <mat-card class="profile-card">
+    <mat-card-header class="profile-card-header">
+      <mat-card-title class="profile-card-header-title"
+        >Hello, {{ user.Username }}!</mat-card-title
+      >
+    </mat-card-header>
+    <mat-card-title class="user-update-card-title"
+      >Update your information below</mat-card-title
+    >
+    <mat-card-content>
+      <form class="user-update-form">
+        <mat-form-field>
+          <mat-label>{{ user.Username }}</mat-label>
+          <input
+            matInput
+            [(ngModel)]="userData.Username"
+            value="{{ userData.Username }}"
+            type="text"
+            name="Username"
+            required
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [(ngModel)]="userData.Password"
+            placeholder="user.Password"
+            value="{{ userData.Password }}"
+            type="password"
+            name="Password"
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{ user.Email }}</mat-label>
+          <input
+            matInput
+            [(ngModel)]="userData.Email"
+            type="email"
+            value="{{ userData.Email }}"
+            name="Email"
+            required
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>{{ user.Birthday }}</mat-label>
+          <input
+            matInput
+            [(ngModel)]="userData.Birthday"
+            type="date"
+            value="{{ userData.Birthday | date : 'yyyy-MM-dd' : 'UTC+0' }}"
+            name="Birthday"
+          />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <!-- <mat-card-actions class="user-profile-actions">
+      <button mat-raised-button (click)="updateUser()" color="basic">
+        <mat-icon>edit</mat-icon>
+        Update profile
+      </button>
+      <button mat-raised-button (click)="deleteAccount()" color="warn">
+        <mat-icon>delete_forever</mat-icon>
+        Delete account
+      </button>
+    </mat-card-actions> -->
+  </mat-card>
+  <app-favorite-movies />
+</div>
