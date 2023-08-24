@@ -1,0 +1,19 @@
+$color: hsl(305, 35%, 80%);
+
+.app-nav-bar {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  z-index: 100;
+  width: 100%;
+  background: linear-gradient(to right, #000000, #434343);
+  color: white;
+}
+
+.top-title {
+  margin-left: 30px;
+}
+
+.mat-buttons {
+  margin-left: 20px;
+}
