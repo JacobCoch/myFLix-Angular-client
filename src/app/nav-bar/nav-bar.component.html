@@ -1,1 +1,20 @@
-<p>nav-bar works!</p>
+<div class="app-nav-bar">
+  <h1 class="top-title">myFlix</h1>
+  <div class="mat-buttons">
+    <button style="color: white" mat-button (click)="toMovies()">Movies</button>
+    <span></span>
+    <button style="color: white" mat-button (click)="toProfile()">
+      Profile
+    </button>
+    <span></span>
+    <button
+      style="color: white"
+      mat-button
+      (click)="logout()"
+      class="logout-button"
+    >
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import { DirectorViewComponent } from '../director-view/director-view.component'
 import { DetailsViewComponent } from '../details-view/details-view.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Router } from '@angular/router';
 /**
  * defines the movie card component
  */
@@ -18,21 +18,24 @@ export class MovieCardComponent implements OnInit {
   /**
    * variables below will manage data received from the API calls
    * @movies stores movies from the db
-   * @favorites stores the user's favorite movies
    */
   movies: any[] = [];
-  favorites: any[] = [];
 
   constructor(
     public fetchApiData: FetchApiDataService,
     public dialog: MatDialog,
-    public snackbar: MatSnackBar
+    public snackbar: MatSnackBar,
+    private router: Router
   ) {}
 
   //ngOnInit is called when Angular is done creating the component
   ngOnInit(): void {
+    const user = localStorage.getItem('user');
+
+    if (!user) {
+      this.router.navigate(['welcome']);
+    }
     this.getMovies();
-    this.getFavorites();
   }
 
   /**
@@ -44,56 +47,6 @@ export class MovieCardComponent implements OnInit {
     this.fetchApiData.getAllMovies().subscribe((resp: any) => {
       this.movies = resp;
       return this.movies;
-    });
-  }
-
-  /**
-   * Fetches user's favorite movies using the API call fetchApiData.getUser()
-   * @function getFavorites
-   * @returns an array of movie id's from the user's favorites list
-   */
-  getFavorites(): any {
-    this.fetchApiData.getUser('').subscribe((resp: any) => {
-      this.favorites = resp.FavoriteMovies;
-      console.log(this.favorites);
-      return this.favorites;
-    });
-  }
-  /**
-   * Determines if a movie id is in the user's favorites list or not
-   * @param id of movie, type: string
-   * @returns boolean showing movie id is true or false
-   */
-  isFavorite(id: string): boolean {
-    return this.favorites.includes(id);
-  }
-
-  /**
-   * Adds movie to user's favorite movies list using the API call fetchApiData.addFavMovie()
-   * @function addToFavorites
-   * @param id of movie, type: string
-   */
-  addToFavorites(id: string): void {
-    console.log(id);
-    this.fetchApiData.getFavoriteMovies().subscribe((resp: any) => {
-      this.snackbar.open('The movie was added to favorites.', 'OK', {
-        duration: 2000,
-      });
-      this.ngOnInit();
-    });
-  }
-
-  /**
-   * Removes movie from user's favorite movies list using the API call fetchApiData.deleteFavMovie()
-   * @function removeFromFavorites
-   * @param id of movie, type: string
-   */
-  removeFromFavorites(id: string): void {
-    this.fetchApiData.deleteFavoriteMovie(id).subscribe((resp: any) => {
-      this.snackbar.open('The movie was removed from favorites.', 'OK', {
-        duration: 2000,
-      });
-      this.ngOnInit();
     });
   }
 
@@ -128,6 +81,23 @@ export class MovieCardComponent implements OnInit {
       width: '600px',
     });
   }
+
+  /**
+   * Determines if a movie id is in the user's favorites list or not
+   * @param id of movie, type: string
+   * @returns boolean showing movie id is true or false
+   */
+  isFavorite(id: string): boolean {
+    return this.fetchApiData.getFavoriteMovies(id);
+  }
+
+  /**
+   * Adds movie to user's favorite movies list using the API call fetchApiData.addFavMovie()
+   * @function addToFavorites
+   * @param id of movie, type: string
+   */
+  addToFavorites(id: string): void {}
+  removeFromFavorites(id: string): void {}
 
   /**
    * Opens dialog to display movie details

@@ -1,1 +1,20 @@
-<p>director-view works!</p>
+<mat-card class="director-dialog">
+  <button
+    class="director-close-button"
+    mat-stroked-button
+    aria-label="close the director details"
+    mat-dialog-close
+    color="primary"
+  >
+    X
+  </button>
+  <mat-card-title>
+    <h3 class="director-dialog-title">{{ data.Name }}</h3>
+  </mat-card-title>
+  <br />
+  <mat-dialog-content class="director-dialog-content">
+    <b>Bio: </b>{{ data.Bio }} <br />
+    <br />
+    <b>Birth year: </b>{{ data.Birthday }}
+  </mat-dialog-content>
+</mat-card>

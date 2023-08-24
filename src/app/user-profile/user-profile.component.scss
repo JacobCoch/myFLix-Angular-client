@@ -1,0 +1,33 @@
+//$secondary-color: hsl(127, 66%, 28%);
+
+.profile-page {
+  padding-left: 10%;
+  padding-right: 10%;
+  text-align: center;
+  padding-top: 30px;
+  background: #252525;
+}
+
+.profile-card {
+  border: 1px solid black;
+}
+
+.profile-card-header-title {
+  font-size: 24px;
+  width: 100%;
+}
+
+.profile-card-content {
+  padding: 5px;
+}
+
+.user-update-card-title {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.user-profile-actions {
+  display: flex;
+  margin: 5px;
+  gap: 10px;
+}
