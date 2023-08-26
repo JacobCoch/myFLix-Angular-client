@@ -82,23 +82,41 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  getUser(userDetails: any): Observable<any> {
+  getUser(): Observable<any> {
     const token = localStorage.getItem('token');
-    const username = localStorage.getItem('user');
-    console.log('Token:', token);
-    console.log('Username:', username);
+    const userString = localStorage.getItem('user'); // Retrieve as a string
 
-    const headers = new HttpHeaders({
-      Authorization: 'Bearer ' + token,
-    });
+    if (userString) {
+      const user = JSON.parse(userString); // Parse if not null
 
-    return this.http
-      .get(apiUrl + 'users/' + username, { headers })
-      .pipe(
+      const headers = new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      });
+
+      return this.http.get(apiUrl + 'users/' + user.Username, { headers }).pipe(
         tap((response) => {
           console.log('API Response:', response);
-        })
-      )
+        }),
+        map(this.extractResponseData),
+        catchError(this.handleError)
+      );
+    } else {
+      // Handle the case when userString is null
+      console.error('User data not found in localStorage');
+      return throwError(() => 'User data not found in localStorage');
+    }
+  }
+
+  editUser(userDetails: any): Observable<any> {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
+    console.log(userDetails);
+    return this.http
+      .put(apiUrl + 'users/' + user.Username, userDetails, {
+        headers: new HttpHeaders({
+          Authorization: 'Bearer ' + token,
+        }),
+      })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
@@ -127,18 +145,6 @@ export class FetchApiDataService {
           }),
         }
       )
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
-  }
-
-  editUser(userDetails: any): Observable<any> {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const token = localStorage.getItem('token');
-    return this.http
-      .put(apiUrl + 'users/' + user.Username, userDetails, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 

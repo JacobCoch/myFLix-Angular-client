@@ -47,23 +47,22 @@
             matInput
             [(ngModel)]="userData.Birthday"
             type="date"
-            value="{{ userData.Birthday | date : 'yyyy-MM-dd' : 'UTC+0' }}"
             name="Birthday"
           />
         </mat-form-field>
       </form>
     </mat-card-content>
 
-    <!-- <mat-card-actions class="user-profile-actions">
+    <mat-card-actions class="user-profile-actions">
       <button mat-raised-button (click)="updateUser()" color="basic">
         <mat-icon>edit</mat-icon>
         Update profile
       </button>
-      <button mat-raised-button (click)="deleteAccount()" color="warn">
+      <!-- <button mat-raised-button (click)="deleteAccount()" color="warn">
         <mat-icon>delete_forever</mat-icon>
         Delete account
-      </button>
-    </mat-card-actions> -->
+      </button> -->
+    </mat-card-actions>
   </mat-card>
   <app-favorite-movies />
 </div>

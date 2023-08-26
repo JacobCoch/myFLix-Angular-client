@@ -32,34 +32,37 @@ export class UserProfileComponent implements OnInit {
   }
 
   getUserInfo(): void {
-    this.fetchApiData.getUser(this.userData).subscribe((resp: any) => {
-      console.log(resp);
+    this.fetchApiData.getUser().subscribe((resp: any) => {
+      this.user = resp;
+      resp.Birthday = formatDate(resp.Birthday, 'yyyy-MM-dd', 'en-US');
+
+      console.log(this.user);
     });
   }
 
-  // updateUser(): void {
-  //   this.fetchApiData.editUser(this.userData).subscribe((resp: any) => {
-  //     console.log(resp);
-  //     if (
-  //       this.user.Username !== resp.Username ||
-  //       this.user.Username !== resp.Password
-  //     ) {
-  //       localStorage.clear();
-  //       this.router.navigate(['welcome']);
-  //       this.snackBar.open(
-  //         'Profile updated successfully! Please log in again.',
-  //         'OK',
-  //         {
-  //           duration: 2000,
-  //         }
-  //       );
-  //     } else {
-  //       this.snackBar.open('User information has been updated!', 'OK', {
-  //         duration: 2000,
-  //       });
-  //     }
-  //   });
-  // }
+  updateUser(): void {
+    this.fetchApiData.editUser(this.userData).subscribe((resp: any) => {
+      console.log(resp);
+      if (
+        this.user.Username !== resp.Username ||
+        this.user.Username !== resp.Password
+      ) {
+        localStorage.clear();
+        this.router.navigate(['welcome']);
+        this.snackBar.open(
+          'Profile updated successfully! Please log in again.',
+          'OK',
+          {
+            duration: 2000,
+          }
+        );
+      } else {
+        this.snackBar.open('User information has been updated!', 'OK', {
+          duration: 2000,
+        });
+      }
+    });
+  }
 
   // deleteAccount(): void {
   //   if (confirm('All your data will be lost - this cannout be undone!')) {
