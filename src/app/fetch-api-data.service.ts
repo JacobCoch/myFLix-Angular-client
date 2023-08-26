@@ -16,7 +16,7 @@ const apiUrl = 'https://mymovieapidb.herokuapp.com/';
 export class FetchApiDataService {
   // Inject the HttpClient module to the constructor params.
   // This will provide HttpClient to the entire class, making it available via this.http
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {} // HttpClient is a service that allows us to make HTTP requests
 
   /**
    *
@@ -26,6 +26,7 @@ export class FetchApiDataService {
   public userRegistration(userDetails: any): Observable<any> {
     console.log(userDetails);
     return this.http
+
       .post(apiUrl + 'users', userDetails) // Pass userDetails as the request body
       .pipe(catchError(this.handleError));
   }
