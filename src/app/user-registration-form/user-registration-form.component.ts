@@ -5,7 +5,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FetchApiDataService } from '../fetch-api-data.service';
 //display notification back to user
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-registration-form',
@@ -19,8 +18,7 @@ export class UserRegistrationFormComponent implements OnInit {
   constructor(
     public fetchApiData: FetchApiDataService,
     public dialogRef: MatDialogRef<UserRegistrationFormComponent>,
-    public snackBar: MatSnackBar,
-    private router: Router
+    public snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {}
@@ -29,18 +27,16 @@ export class UserRegistrationFormComponent implements OnInit {
   registerUser(): void {
     this.fetchApiData.userRegistration(this.userData).subscribe(
       (result) => {
-        localStorage.setItem('token', result.token);
-        localStorage.setItem('user', JSON.stringify(result.user));
         this.dialogRef.close(); // This will close the modal on success!
-        this.router.navigate(['movies']);
-        this.snackBar.open(result, 'OK', {
+        this.snackBar.open(result, 'User created!', {
           duration: 2000,
         });
       },
-      (error) => {
-        console.log(error);
-        this.snackBar.open(error, 'OK', {
-          duration: 2000,
+      (result) => {
+        console.log(result.error); // Log the error object for more details
+        const errorMessage = result.error.message || 'An error occurred';
+        this.snackBar.open(errorMessage, 'OK', {
+          duration: 5000, // Increase duration to give more time to read the error message
         });
       }
     );

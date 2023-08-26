@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import {
   HttpClient,
@@ -24,12 +24,14 @@ export class FetchApiDataService {
    * @returns an Observable of the API call
    */
   public userRegistration(userDetails: any): Observable<any> {
+    console.log(userDetails);
     return this.http
-      .post(apiUrl + 'users', userDetails)
+      .post(apiUrl + 'users', userDetails) // Pass userDetails as the request body
       .pipe(catchError(this.handleError));
   }
 
   public userLogin(userDetails: any): Observable<any> {
+    console.log(userDetails);
     return this.http
       .post(apiUrl + 'login?' + new URLSearchParams(userDetails), {})
       .pipe(catchError(this.handleError));
@@ -79,15 +81,23 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  getUser(): Observable<any> {
+  getUser(userDetails: any): Observable<any> {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('user');
+    console.log('Token:', token);
+    console.log('Username:', username);
+
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token,
+    });
+
     return this.http
-      .get(apiUrl + 'users/' + username, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
+      .get(apiUrl + 'users/' + username, { headers })
+      .pipe(
+        tap((response) => {
+          console.log('API Response:', response);
+        })
+      )
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
@@ -163,6 +173,7 @@ export class FetchApiDataService {
   }
 
   private extractResponseData(res: any): any {
+    console.log(res);
     const body = res;
     return body || {};
   }

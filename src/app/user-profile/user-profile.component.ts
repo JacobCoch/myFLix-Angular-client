@@ -27,21 +27,13 @@ export class UserProfileComponent implements OnInit {
     public router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUserInfo();
+  }
 
   getUserInfo(): void {
-    this.fetchApiData.getUser().subscribe((resp: any) => {
-      this.user = resp;
-      this.user.Username = this.user.Username;
-      this.user.Email = this.user.Email;
-      this.user.Birthday = formatDate(
-        this.user.Birthday,
-        'yyyy-MM-dd',
-        'en-US',
-        'UTC+0'
-      );
-      this.favorites = this.user.FavoriteMovies;
-      return this.user;
+    this.fetchApiData.getUser(this.userData).subscribe((resp: any) => {
+      console.log(resp);
     });
   }
 
