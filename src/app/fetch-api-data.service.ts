@@ -108,16 +108,27 @@ export class FetchApiDataService {
   }
 
   editUser(userDetails: any): Observable<any> {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userString = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-    console.log(userDetails);
-    return this.http
-      .put(apiUrl + 'users/' + user.Username, userDetails, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
+    if (userString) {
+      const user = JSON.parse(userString);
+      const headers = new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      });
+
+      return this.http
+        .put(apiUrl + 'users/' + user.Username, userDetails, { headers })
+        .pipe(
+          tap((response) => {
+            console.log('API Response:', response);
+          }),
+          map(this.extractResponseData),
+          catchError(this.handleError)
+        );
+    } else {
+      console.error('User data not found in localStorage');
+      return throwError(() => 'User data not found in localStorage');
+    }
   }
 
   getFavoriteMovies(movieId: string): boolean {

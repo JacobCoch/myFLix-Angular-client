@@ -10,6 +10,7 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit {
+  navbarHeight: number = 95;
   user: any = {};
   initialInput: any = {};
   favorites: any = [];
@@ -34,34 +35,39 @@ export class UserProfileComponent implements OnInit {
   getUserInfo(): void {
     this.fetchApiData.getUser().subscribe((resp: any) => {
       this.user = resp;
-      resp.Birthday = formatDate(resp.Birthday, 'yyyy-MM-dd', 'en-US');
-
-      console.log(this.user);
+      resp.Birthday = formatDate(resp.Birthday, 'MM-dd-yyyy', 'en-US');
     });
   }
 
   updateUser(): void {
-    this.fetchApiData.editUser(this.userData).subscribe((resp: any) => {
-      console.log(resp);
-      if (
-        this.user.Username !== resp.Username ||
-        this.user.Username !== resp.Password
-      ) {
-        localStorage.clear();
-        this.router.navigate(['welcome']);
-        this.snackBar.open(
-          'Profile updated successfully! Please log in again.',
-          'OK',
-          {
-            duration: 2000,
-          }
-        );
-      } else {
+    if (!this.isValidUserData(this.userData)) {
+      this.snackBar.open('Please fill out all fields!', 'OK', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    this.fetchApiData.editUser(this.userData).subscribe(
+      (resp: any) => {
         this.snackBar.open('User information has been updated!', 'OK', {
           duration: 2000,
         });
+
+        // Update only the modified fields in local storage
+        const userString = localStorage.getItem('user');
+        if (userString) {
+          const currentUser = JSON.parse(userString);
+          const updatedUser = { ...currentUser, ...this.userData };
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        }
+
+        this.router.navigate(['movies']);
+      },
+      (error) => {
+        console.error('Error updating user:', error);
+        // Handle error gracefully, show error message to user, etc.
       }
-    });
+    );
   }
 
   // deleteAccount(): void {
@@ -81,4 +87,13 @@ export class UserProfileComponent implements OnInit {
   //     });
   //   }
   // }
+
+  private isValidUserData(userData: any): boolean {
+    return (
+      userData.Username &&
+      userData.Password &&
+      userData.Email &&
+      userData.Birthday
+    );
+  }
 }

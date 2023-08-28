@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./movie-card.component.scss'],
 })
 export class MovieCardComponent implements OnInit {
+  navbarHeight: number = 95;
   /**
    * variables below will manage data received from the API calls
    * @movies stores movies from the db

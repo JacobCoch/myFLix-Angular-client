@@ -2,6 +2,9 @@
 $color-primary: #ff8c00;
 $color-secondary: #ff4500;
 $color-text: #ffffff;
+$card-background: #112d4e;
+$hover-red: #ff0000;
+$fav-icon-white: #dbe2ef;
 
 .movie-card-container {
   display: flex;
@@ -20,11 +23,11 @@ $color-text: #ffffff;
   flex-basis: calc(25% - 30px);
   flex-shrink: 0;
   margin-bottom: 30px;
-  border: 2px solid transparent; // Remove the black border
-  background: #000000;
+  border: 2px solid transparent;
+  background: $card-background;
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); // Add a subtle box shadow
-  transition: all 0.3s ease; // Smooth transition on hover
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);
@@ -70,7 +73,7 @@ button {
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: $color-secondary;
+    background-color: $hover-red;
   }
 }
 
@@ -80,10 +83,14 @@ mat-icon {
   transition: color 0.3s ease;
 
   &:hover {
-    color: $color-secondary; // Use secondary color on hover
+    color: $hover-red; // Use secondary color on hover
   }
 }
 
 .fav-icon {
-  color: $color-secondary; // Use secondary color for favorite icon
+  color: $fav-icon-white; // Use secondary color for favorite icon
+}
+
+.movie-card-buttons {
+  gap: 0.6rem;
 }

@@ -1,13 +1,16 @@
 <app-nav-bar></app-nav-bar>
 <div class="main-container">
-  <div class="movie-card-container">
+  <div
+    [ngStyle]="{ 'padding-top.px': navbarHeight }"
+    class="movie-card-container"
+  >
     <mat-card *ngFor="let movie of movies" class="movie-card">
       <mat-card-header>
         <mat-card-title>{{ movie.Title }}</mat-card-title>
         <mat-card-subtitle>{{ movie.Director.Name }}</mat-card-subtitle>
       </mat-card-header>
       <img src="{{ movie.ImagePath }}" alt="{{ movie.Title }}" />
-      <mat-card-actions>
+      <mat-card-actions class="movie-card-buttons">
         <button
           mat-button
           style="color: white"
