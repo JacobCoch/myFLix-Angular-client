@@ -40,12 +40,11 @@ export class FetchApiDataService {
 
   getAllMovies(): Observable<any> {
     const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token,
+    });
     return this.http
-      .get(apiUrl + 'movies', {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
+      .get(apiUrl + 'movies', { headers })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
@@ -131,32 +130,41 @@ export class FetchApiDataService {
     }
   }
 
-  getFavoriteMovies(movieId: string): boolean {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user) {
-      return user.FavoriteMovies.includes(movieId);
+  getFavoriteMovies(id: string): boolean {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const user = JSON.parse(userString);
+      return user.FavoriteMovies.includes(id);
     }
+
     return false;
   }
 
   addFavoriteMovie(movieId: string): Observable<any> {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userString = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
-    user.FavoriteMovies.push(movieId);
-    localStorage.setItem('user', JSON.stringify(user));
+    if (userString) {
+      const user = JSON.parse(userString);
+      const headers = new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      });
 
-    return this.http
-      .post(
-        apiUrl + 'users/' + user.Username + '/movies/' + movieId,
-        {},
-        {
-          headers: new HttpHeaders({
-            Authorization: 'Bearer ' + token,
-          }),
-        }
-      )
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
+      if (user.FavoriteMovies.includes(movieId)) {
+        return throwError(() => 'Movie already in favorites');
+      }
+
+      user.FavoriteMovies.push(movieId);
+
+      return this.http
+        .post(apiUrl + 'users/' + user.Username + '/' + movieId, null, {
+          headers,
+        })
+        .pipe(map(this.extractResponseData), catchError(this.handleError));
+    } else {
+      console.error('User data not found in localStorage');
+      return throwError(() => 'User data not found in localStorage');
+    }
   }
 
   deleteUser(): Observable<any> {

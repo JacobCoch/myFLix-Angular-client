@@ -97,8 +97,31 @@ export class MovieCardComponent implements OnInit {
    * @function addToFavorites
    * @param id of movie, type: string
    */
-  addToFavorites(id: string): void {}
-  removeFromFavorites(id: string): void {}
+  addToFavorites(id: string): void {
+    this.fetchApiData.addFavoriteMovie(id).subscribe(
+      () => {
+        console.log('Movie added to favorites');
+        this.snackbar.open('Added to favorites!', 'OK', {
+          duration: 2000,
+        });
+      },
+      (error) => {
+        console.error(error);
+        this.snackbar.open(error, 'OK', {
+          duration: 2000,
+        });
+      }
+    );
+  }
+
+  removeFromFavorites(id: string): void {
+    this.fetchApiData.deleteFavoriteMovie(id).subscribe((resp: any) => {
+      this.snackbar.open('Removed from favorites!', 'OK', {
+        duration: 2000,
+      });
+      return this.ngOnInit();
+    });
+  }
 
   /**
    * Opens dialog to display movie details
