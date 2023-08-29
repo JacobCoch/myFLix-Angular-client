@@ -1,20 +1,27 @@
-//$secondary-color: hsl(127, 66%, 28%);
+$profile-card: #3f72af;
+$profile-text: #fff;
 
 .profile-page {
   padding-left: 10%;
   padding-right: 10%;
   text-align: center;
   padding-top: 30px;
-  background: #252525;
+
+  background: url("https://thumbs.dreamstime.com/b/seamless-cinema-pattern-can-be-used-wallpaper-website-background-wrapping-paper-vector-bright-film-design-movie-74251212.jpg")
+    center/cover; // Use the provided image as the background
 }
 
 .profile-card {
-  border: 1px solid black;
+  border: none;
+  border-radius: 0.7rem;
+  box-shadow: 0.3rem 0.3rem 0.5rem rgba(0, 0, 0, 0.3);
+  background-color: $profile-card;
 }
 
 .profile-card-header-title {
   font-size: 24px;
   width: 100%;
+  color: $profile-text;
 }
 
 .profile-card-content {
@@ -24,10 +31,27 @@
 .user-update-card-title {
   padding-top: 15px;
   padding-bottom: 15px;
+  color: $profile-text;
+}
+
+.user-update-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border-radius: 0.7rem;
 }
 
 .user-profile-actions {
   display: flex;
   margin: 5px;
   gap: 10px;
+  justify-content: center;
+}
+
+.profile-card-header-title {
+  text-transform: capitalize;
+}
+
+.update-button {
+  border: none;
 }

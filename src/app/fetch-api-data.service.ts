@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import {
   HttpClient,
@@ -16,7 +16,7 @@ const apiUrl = 'https://mymovieapidb.herokuapp.com/';
 export class FetchApiDataService {
   // Inject the HttpClient module to the constructor params.
   // This will provide HttpClient to the entire class, making it available via this.http
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {} // HttpClient is a service that allows us to make HTTP requests
 
   /**
    *
@@ -24,12 +24,15 @@ export class FetchApiDataService {
    * @returns an Observable of the API call
    */
   public userRegistration(userDetails: any): Observable<any> {
+    console.log(userDetails);
     return this.http
-      .post(apiUrl + 'users', userDetails)
+
+      .post(apiUrl + 'users', userDetails) // Pass userDetails as the request body
       .pipe(catchError(this.handleError));
   }
 
   public userLogin(userDetails: any): Observable<any> {
+    console.log(userDetails);
     return this.http
       .post(apiUrl + 'login?' + new URLSearchParams(userDetails), {})
       .pipe(catchError(this.handleError));
@@ -37,12 +40,11 @@ export class FetchApiDataService {
 
   getAllMovies(): Observable<any> {
     const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token,
+    });
     return this.http
-      .get(apiUrl + 'movies', {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
+      .get(apiUrl + 'movies', { headers })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
@@ -81,54 +83,88 @@ export class FetchApiDataService {
 
   getUser(): Observable<any> {
     const token = localStorage.getItem('token');
-    const username = localStorage.getItem('user');
-    return this.http
-      .get(apiUrl + 'users/' + username, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
+    const userString = localStorage.getItem('user'); // Retrieve as a string
+
+    if (userString) {
+      const user = JSON.parse(userString); // Parse if not null
+
+      const headers = new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      });
+
+      return this.http.get(apiUrl + 'users/' + user.Username, { headers }).pipe(
+        tap((response) => {
+          console.log('API Response:', response);
         }),
-      })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
+        map(this.extractResponseData),
+        catchError(this.handleError)
+      );
+    } else {
+      // Handle the case when userString is null
+      console.error('User data not found in localStorage');
+      return throwError(() => 'User data not found in localStorage');
+    }
   }
 
-  getFavoriteMovies(movieId: string): boolean {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user) {
-      return user.FavoriteMovies.includes(movieId);
+  editUser(userDetails: any): Observable<any> {
+    const userString = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (userString) {
+      const user = JSON.parse(userString);
+      const headers = new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      });
+
+      return this.http
+        .put(apiUrl + 'users/' + user.Username, userDetails, { headers })
+        .pipe(
+          tap((response) => {
+            console.log('API Response:', response);
+          }),
+          map(this.extractResponseData),
+          catchError(this.handleError)
+        );
+    } else {
+      console.error('User data not found in localStorage');
+      return throwError(() => 'User data not found in localStorage');
     }
+  }
+
+  getFavoriteMovies(id: string): boolean {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const user = JSON.parse(userString);
+      return user.FavoriteMovies.includes(id);
+    }
+
     return false;
   }
 
   addFavoriteMovie(movieId: string): Observable<any> {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userString = localStorage.getItem('user');
     const token = localStorage.getItem('token');
 
-    user.FavoriteMovies.push(movieId);
-    localStorage.setItem('user', JSON.stringify(user));
+    if (userString) {
+      const user = JSON.parse(userString);
+      const headers = new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      });
 
-    return this.http
-      .post(
-        apiUrl + 'users/' + user.Username + '/movies/' + movieId,
-        {},
-        {
-          headers: new HttpHeaders({
-            Authorization: 'Bearer ' + token,
-          }),
-        }
-      )
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
-  }
+      if (user.FavoriteMovies.includes(movieId)) {
+        return throwError(() => 'Movie already in favorites');
+      }
 
-  editUser(userDetails: any): Observable<any> {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const token = localStorage.getItem('token');
-    return this.http
-      .put(apiUrl + 'users/' + user.Username, userDetails, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
+      user.FavoriteMovies.push(movieId);
+
+      return this.http
+        .post(apiUrl + 'users/' + user.Username + '/' + movieId, null, {
+          headers,
+        })
+        .pipe(map(this.extractResponseData), catchError(this.handleError));
+    } else {
+      console.error('User data not found in localStorage');
+      return throwError(() => 'User data not found in localStorage');
+    }
   }
 
   deleteUser(): Observable<any> {
@@ -163,6 +199,7 @@ export class FetchApiDataService {
   }
 
   private extractResponseData(res: any): any {
+    console.log(res);
     const body = res;
     return body || {};
   }

@@ -1,0 +1,76 @@
+$background-color: #112d4e;
+$color-primary: #ff8c00;
+$hover-red: #ff0000;
+$fav-icon-white: #dbe2ef;
+$profile-card: #3f72af;
+
+.favorite-movies-view {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-block: 30px;
+  gap: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.favorite-movies__title {
+  padding-top: 20px;
+  font-size: 32px;
+  color: $background-color;
+}
+
+img {
+  height: 400px;
+  width: 275px;
+  margin: auto;
+}
+
+mat-card-title {
+  font-size: 24px;
+  text-align: left;
+}
+
+mat-card-subtitle {
+  font-size: 16px;
+  padding-bottom: 10px;
+  color: white;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(25% - 30px);
+  flex-shrink: 0;
+  margin-bottom: 30px;
+  border: 2px solid black;
+  background: $background-color;
+  color: white;
+}
+
+// further actions and buttons on the movie cards (director, genre, synopsis)
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 10px 10px 10px;
+}
+
+button {
+  font-size: 18px;
+}
+
+mat-icon {
+  font-size: 22px;
+  color: $color-primary; // Use the primary color for icons
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $fav-icon-white; // Use secondary color on hover
+  }
+}
+
+.fav-icon {
+  color: $hover-red; // Use secondary color for favorite icon
+}

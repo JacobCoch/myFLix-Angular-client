@@ -2,11 +2,12 @@ $color: hsl(305, 35%, 80%);
 
 .app-nav-bar {
   display: flex;
+  position: fixed;
   align-items: center;
   border-bottom: 1px solid #444;
   z-index: 100;
   width: 100%;
-  background: linear-gradient(to right, #000000, #434343);
+  background: linear-gradient(to right, #000000, #112d4e, #112d4e, #000000);
   color: white;
 }
 

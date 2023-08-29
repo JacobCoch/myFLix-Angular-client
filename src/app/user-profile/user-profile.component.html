@@ -1,5 +1,5 @@
 <app-nav-bar></app-nav-bar>
-<div class="profile-page">
+<div [ngStyle]="{ 'padding-top.px': navbarHeight }" class="profile-page">
   <mat-card class="profile-card">
     <mat-card-header class="profile-card-header">
       <mat-card-title class="profile-card-header-title"
@@ -16,7 +16,6 @@
           <input
             matInput
             [(ngModel)]="userData.Username"
-            value="{{ userData.Username }}"
             type="text"
             name="Username"
             required
@@ -27,10 +26,9 @@
           <input
             matInput
             [(ngModel)]="userData.Password"
-            placeholder="user.Password"
-            value="{{ userData.Password }}"
             type="password"
             name="Password"
+            required
           />
         </mat-form-field>
         <mat-form-field>
@@ -50,23 +48,23 @@
             matInput
             [(ngModel)]="userData.Birthday"
             type="date"
-            value="{{ userData.Birthday | date : 'yyyy-MM-dd' : 'UTC+0' }}"
             name="Birthday"
+            required
           />
         </mat-form-field>
       </form>
     </mat-card-content>
 
-    <!-- <mat-card-actions class="user-profile-actions">
-      <button mat-raised-button (click)="updateUser()" color="basic">
+    <mat-card-actions class="user-profile-actions">
+      <button class="update-button" mat-raised-button (click)="updateUser()">
         <mat-icon>edit</mat-icon>
         Update profile
       </button>
-      <button mat-raised-button (click)="deleteAccount()" color="warn">
+      <!-- <button mat-raised-button (click)="deleteAccount()" color="warn">
         <mat-icon>delete_forever</mat-icon>
         Delete account
-      </button>
-    </mat-card-actions> -->
+      </button> -->
+    </mat-card-actions>
   </mat-card>
   <app-favorite-movies />
 </div>
