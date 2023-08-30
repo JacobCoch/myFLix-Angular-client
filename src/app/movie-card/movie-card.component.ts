@@ -29,7 +29,7 @@ export class MovieCardComponent implements OnInit {
     private router: Router
   ) {}
 
-  //ngOnInit is called when Angular is done creating the component
+  //ngOnInit is a lifecycle hook that runs when the component initializes
   ngOnInit(): void {
     const user = localStorage.getItem('user');
 
