@@ -6,16 +6,22 @@ import { DetailsViewComponent } from '../details-view/details-view.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-/**
- * defines the movie card component
- */
+
 @Component({
   selector: 'app-movie-card',
   templateUrl: './movie-card.component.html',
   styleUrls: ['./movie-card.component.scss'],
 })
+
+/**
+ * this is the MovieCardComponent
+ * @export
+ * @class MovieCardComponent
+ * @implements {OnInit}
+ *
+ */
 export class MovieCardComponent implements OnInit {
+  // TYPES are set to any for now, but can be changed to more specific types later
   navbarHeight: number = 95;
   movies: Array<any> = [];
   favoriteStatus: { [movieId: string]: boolean } = {};
@@ -29,30 +35,33 @@ export class MovieCardComponent implements OnInit {
     private router: Router
   ) {}
 
-  //ngOnInit is a lifecycle hook that runs when the component initializes
   ngOnInit(): void {
     const user = localStorage.getItem('user');
 
     if (!user) {
       this.router.navigate(['welcome']);
     }
-    this.getMovies();
-    this.updateFavoriteStatus();
-    this.getFavoriteMovies();
-  }
 
-  /**
-   * Fetches all movies using the API call fetchApiData.getAllMovies()
-   * @function getMovies
-   * @returns an object array of all movies
-   */
-  getMovies(): void {
+    /**
+     * Fetches all movies using the API call fetchApiData.getAllMovies()
+     * @function getAllMovies
+     * @returns an object array of all movies
+     * @method updateFavoriteStatus
+     * @method getFavoriteMovies
+     */
     this.fetchApiData.getAllMovies().subscribe((resp: any) => {
       this.movies = resp;
-      return this.movies;
+      this.updateFavoriteStatus();
+      this.getFavoriteMovies();
     });
   }
 
+  /**
+   * Fetches all favorite movies using the API call fetchApiData.getUser()
+   * @function getFavoriteMovies
+   * @returns an object array of all favorite movies
+   * @method updateFavoriteStatus
+   */
   getFavoriteMovies(): void {
     this.fetchApiData.getUser().subscribe((resp: any) => {
       this.user = resp;
@@ -60,15 +69,100 @@ export class MovieCardComponent implements OnInit {
         this.favoriteMovies = resp.filter((movie: any) =>
           this.user.FavoriteMovies.includes(movie._id)
         );
+        this.updateFavoriteStatus();
         return this.favoriteMovies;
       });
     });
   }
 
   /**
+   * Determines if a movie id is in the user's favorites list or not
+   * @param {string} id of movie
+   * @returns boolean showing movie id is true or false
+   */
+  isFavorite(id: string): boolean {
+    return this.favoriteStatus[id] === true;
+  }
+
+  /**
+   * Updates favoriteStatus object with movie id and boolean value
+   * @function updateFavoriteStatus
+   * @returns favoriteStatus object
+   */
+  updateFavoriteStatus(): void {
+    this.favoriteMovies.forEach((movie: any) => {
+      this.favoriteStatus[movie._id] = true;
+    });
+  }
+
+  /**
+   * Adds movie to user's favorite movies list using the API call fetchApiData.addFavMovie()
+   * @function addToFavorites
+   * @param {string} id of movie
+   * @returns favoriteStatus object
+   * @method updateFavoriteStatus
+   */
+  addToFavorites(id: string): void {
+    const username = localStorage.getItem('Username');
+
+    if (username) {
+      this.fetchApiData.addFavoriteMovie(id).subscribe({
+        next: () => {
+          this.favoriteStatus[id] = true;
+          this.snackbar.open('Added to favorites!', 'OK', {
+            duration: 2000,
+          });
+        },
+        error: (error) => {
+          console.error(error);
+          this.snackbar.open(error, 'OK', {
+            duration: 2000,
+          });
+        },
+        complete: () => {
+          // Handle completion if needed
+        },
+      });
+    } else {
+      console.warn('Username is not available.');
+    }
+  }
+
+  /**
+   * Removes movie from user's favorite movies list using the API call fetchApiData.deleteFavMovie()
+   * @function removeFromFavorites
+   * @param {string} id of movie
+   * @returns favoriteStatus object
+   * @method updateFavoriteStatus
+   */
+  removeFromFavorites(id: string): void {
+    const username = localStorage.getItem('Username');
+    if (username) {
+      this.fetchApiData.deleteFavoriteMovie(id).subscribe({
+        next: () => {
+          this.favoriteStatus[id] = false;
+          this.snackbar.open('Removed from favorites!', 'OK', {
+            duration: 2000,
+          });
+        },
+        error: (error) => {
+          console.error(error);
+          this.snackbar.open(error, 'OK', {
+            duration: 2000,
+          });
+        },
+      });
+    } else {
+      console.warn('Username is not available.');
+    }
+  }
+
+  /**
    * Opens dialog to display genre details
-   * @param name of specfic Genre
-   * @param description of specific Genre
+   * @function openGenre
+   * @param {string} name of specific Genre
+   * @param {string} description of specific Genre
+   * @returns GenreViewComponent
    */
   openGenre(name: string, description: string): void {
     this.dialog.open(GenreViewComponent, {
@@ -82,9 +176,11 @@ export class MovieCardComponent implements OnInit {
 
   /**
    * Opens dialog to display director details
-   * @param name of director
-   * @param bio of director
-   * @param birthday of director
+   * @function openDirector
+   * @param {string} name of director
+   * @param {string} bio of director
+   * @param {string} birthday of director
+   * @returns DirectorViewComponent
    */
   openDirector(name: string, bio: string, birthday: string): void {
     this.dialog.open(DirectorViewComponent, {
@@ -98,82 +194,11 @@ export class MovieCardComponent implements OnInit {
   }
 
   /**
-   * Determines if a movie id is in the user's favorites list or not
-   * @param id of movie, type: string
-   * @returns boolean showing movie id is true or false
-   */
-  isFavorite(id: string): boolean {
-    return this.favoriteStatus[id] === true;
-  }
-
-  /**
-   * Updates favoriteStatus object with movie id and boolean value
-   * @function updateFavoriteStatus
-   * @returns favoriteStatus object
-   */
-  updateFavoriteStatus(): void {
-    const username = localStorage.getItem('Username');
-
-    if (username) {
-      this.fetchApiData.getFavoriteMovies(username).subscribe(
-        (response) => {
-          this.favoriteStatus = {}; // Reset the favoriteStatus
-          response.forEach((movie: any) => {
-            this.favoriteStatus[movie._id] = true; // Set movies as favorite
-          });
-        },
-        (error) => {
-          console.error('Error fetching favorite movies:', error);
-        }
-      );
-    } else {
-      console.warn('Username is not available.');
-    }
-  }
-
-  /**
-   * Adds movie to user's favorite movies list using the API call fetchApiData.addFavMovie()
-   * @function addToFavorites
-   * @param id of movie, type: string
-   */
-  addToFavorites(id: string): void {
-    const username = localStorage.getItem('Username');
-
-    if (username) {
-      this.fetchApiData.addFavoriteMovie(id).subscribe(
-        () => {
-          this.favoriteStatus[id] = true;
-          this.snackbar.open('Added to favorites!', 'OK', {
-            duration: 2000,
-          });
-        },
-        (error) => {
-          console.error(error);
-          this.snackbar.open(error, 'OK', {
-            duration: 2000,
-          });
-        }
-      );
-    } else {
-      console.warn('Username is not available.');
-    }
-  }
-
-  removeFromFavorites(id: string): void {
-    const username = localStorage.getItem('Username');
-
-    this.fetchApiData.deleteFavoriteMovie(id).subscribe(() => {
-      this.favoriteStatus[id] = false; // Update favoriteStatus when movie is removed
-      this.snackbar.open('Removed from favorites!', 'OK', {
-        duration: 2000,
-      });
-    });
-  }
-
-  /**
    * Opens dialog to display movie details
-   * @param title of movie
-   * @param description of movie
+   * @function openDetails
+   * @param {string} title of movie
+   * @param {string} description of movie
+   * @returns DetailsViewComponent
    */
   openDetails(title: string, description: string): void {
     this.dialog.open(DetailsViewComponent, {

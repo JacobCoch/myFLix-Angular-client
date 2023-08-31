@@ -19,16 +19,12 @@
  * @method extractResponseData()
  * @method handleError()
  * 
- * 
- * The Api can be found at:
- * https://mymovieapidb.herokuapp.com/
- * 
 
  */
 
 import { Injectable } from '@angular/core';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, throwError, of, Observer } from 'rxjs';
 import {
   HttpClient,
   HttpHeaders,
@@ -193,30 +189,8 @@ export class FetchApiDataService {
   }
 
   /**
-   * @method getFavoriteMovies
-   * @param id
-   * @returns  an Observable of the API call
-   */
-  getFavoriteMovies(username: string): Observable<any> {
-    const token = localStorage.getItem('token');
-
-    return this.http
-      .get(apiUrl + 'users/' + username + '/favorites', {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token,
-        }),
-      })
-      .pipe(
-        tap((response) => {
-          console.log('API Response for favorite movies:', response);
-        }),
-        catchError(this.handleError)
-      );
-  }
-
-  /**
    * @method addFavoriteMovie
-   * @param movieId
+   * @param {string} movieId
    * @returns  an Observable of the API call
    */
   addFavoriteMovie(movieId: string): Observable<any> {
@@ -241,7 +215,7 @@ export class FetchApiDataService {
 
   /**
    * @method deleteFavoriteMovie
-   * @param movieId
+   * @param {string} movieId
    * @returns  an Observable of the API call
    */
   deleteFavoriteMovie(movieId: string): Observable<any> {
@@ -268,12 +242,18 @@ export class FetchApiDataService {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const token = localStorage.getItem('token');
     return this.http
-      .delete(apiUrl + 'users/' + user._id, {
+      .delete(apiUrl + 'users/' + user.Username, {
         headers: new HttpHeaders({
           Authorization: 'Bearer ' + token,
         }),
+        responseType: 'text',
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError((error) => {
+          console.error('error occured:', error);
+          return throwError(() => error || 'Server error');
+        })
+      );
   }
 
   /**

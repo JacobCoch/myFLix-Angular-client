@@ -64,4 +64,9 @@ const appRoutes: Routes = [
   providers: [],
   bootstrap: [AppComponent],
 })
+/**
+ * This is the AppModule
+ * @export
+ * @class AppModule
+ */
 export class AppModule {}
