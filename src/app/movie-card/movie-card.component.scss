@@ -13,8 +13,8 @@ $fav-icon-white: #dbe2ef;
   padding-block: 30px;
   gap: 20px;
   background: url("https://thumbs.dreamstime.com/b/seamless-cinema-pattern-can-be-used-wallpaper-website-background-wrapping-paper-vector-bright-film-design-movie-74251212.jpg")
-    center/cover; // Use the provided image as the background
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); // Add a subtle box shadow
+    center/cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .movie-card {
@@ -31,13 +31,13 @@ $fav-icon-white: #dbe2ef;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); // Add a stronger box shadow on hover
-    border: 2px solid $color-primary; // Add a border on hover
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    border: 2px solid $color-primary;
   }
 }
 mat-card-title {
   font-size: 24px;
-  margin-top: 10px; // Add some space above the title
+  margin-top: 10px;
 }
 
 mat-card-subtitle {
@@ -50,7 +50,7 @@ img {
   height: 400px;
   width: 275px;
   margin: auto;
-  object-fit: cover; // Ensure the image fits inside the container without distortion
+  object-fit: cover;
   border-radius: 0.3rem;
 }
 
@@ -58,8 +58,7 @@ mat-card-actions {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center; // Align icons vertically in the center
-  margin: 10px; // Adjust margin for a cleaner look
+  align-items: center;
 }
 
 button {
@@ -79,16 +78,12 @@ button {
 
 mat-icon {
   font-size: 22px;
-  color: $color-primary; // Use the primary color for icons
+  color: $color-primary;
   transition: color 0.3s ease;
 
   &:hover {
-    color: $hover-red; // Use secondary color on hover
+    color: $hover-red;
   }
-}
-
-.fav-icon {
-  color: $fav-icon-white; // Use secondary color for favorite icon
 }
 
 .movie-card-buttons {

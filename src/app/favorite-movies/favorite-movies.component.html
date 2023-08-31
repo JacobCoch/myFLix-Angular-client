@@ -3,13 +3,10 @@
   <mat-card *ngFor="let movie of favoriteMovies" class="movie-card">
     <mat-card-header>
       <mat-card-title>{{ movie.Title }}</mat-card-title>
-      <mat-card-subtitle
-        >Directed by: {{ movie.Director.Name }}</mat-card-subtitle
-      >
     </mat-card-header>
     <img src="{{ movie.ImagePath }}" alt="{{ movie.Title }}" />
     <mat-card-actions>
-      <!-- <button
+      <button
         mat-button
         style="color: white"
         (click)="openGenre(movie.Genre.Name, movie.Genre.Description)"
@@ -35,7 +32,7 @@
         (click)="openDetails(movie.Title, movie.Description)"
       >
         Synopsis
-      </button> -->
+      </button>
       <mat-icon
         class="fav-icon"
         style="cursor: pointer"

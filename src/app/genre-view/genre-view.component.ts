@@ -6,13 +6,18 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './genre-view.component.html',
   styleUrls: ['./genre-view.component.scss'],
 })
+
+/**
+ * This is the GenreViewComponent
+ * @export
+ * @class GenreViewComponent
+ * @implements {OnInit}
+ * @contructor {Inject}
+ * @param {MAT_DIALOG_DATA}
+ * @returns {string} Name
+ * @returns {string} Description
+ */
 export class GenreViewComponent implements OnInit {
-  /**
-   * @constructor is used to set dependencies
-   * @param data - specific genre info, received from moviecard via MAT_DIALOG_DATA
-   * @property {string} Name - name of genre
-   * @property {string} Description - description of genre
-   */
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -21,6 +26,5 @@ export class GenreViewComponent implements OnInit {
     }
   ) {}
 
-  /** this function implements OnInit when the component is initialized */
   ngOnInit(): void {}
 }
