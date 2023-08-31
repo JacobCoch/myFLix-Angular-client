@@ -6,6 +6,7 @@ import { DetailsViewComponent } from '../details-view/details-view.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 /**
  * defines the movie card component
  */
@@ -16,11 +17,10 @@ import { Router } from '@angular/router';
 })
 export class MovieCardComponent implements OnInit {
   navbarHeight: number = 95;
-  /**
-   * variables below will manage data received from the API calls
-   * @movies stores movies from the db
-   */
-  movies: any[] = [];
+  movies: Array<any> = [];
+  favoriteStatus: { [movieId: string]: boolean } = {};
+  user: any = {};
+  favoriteMovies: any[] = [];
 
   constructor(
     public fetchApiData: FetchApiDataService,
@@ -37,6 +37,8 @@ export class MovieCardComponent implements OnInit {
       this.router.navigate(['welcome']);
     }
     this.getMovies();
+    this.updateFavoriteStatus();
+    this.getFavoriteMovies();
   }
 
   /**
@@ -48,6 +50,18 @@ export class MovieCardComponent implements OnInit {
     this.fetchApiData.getAllMovies().subscribe((resp: any) => {
       this.movies = resp;
       return this.movies;
+    });
+  }
+
+  getFavoriteMovies(): void {
+    this.fetchApiData.getUser().subscribe((resp: any) => {
+      this.user = resp;
+      this.fetchApiData.getAllMovies().subscribe((resp: any) => {
+        this.favoriteMovies = resp.filter((movie: any) =>
+          this.user.FavoriteMovies.includes(movie._id)
+        );
+        return this.favoriteMovies;
+      });
     });
   }
 
@@ -89,7 +103,32 @@ export class MovieCardComponent implements OnInit {
    * @returns boolean showing movie id is true or false
    */
   isFavorite(id: string): boolean {
-    return this.fetchApiData.getFavoriteMovies(id);
+    return this.favoriteStatus[id] === true;
+  }
+
+  /**
+   * Updates favoriteStatus object with movie id and boolean value
+   * @function updateFavoriteStatus
+   * @returns favoriteStatus object
+   */
+  updateFavoriteStatus(): void {
+    const username = localStorage.getItem('Username');
+
+    if (username) {
+      this.fetchApiData.getFavoriteMovies(username).subscribe(
+        (response) => {
+          this.favoriteStatus = {}; // Reset the favoriteStatus
+          response.forEach((movie: any) => {
+            this.favoriteStatus[movie._id] = true; // Set movies as favorite
+          });
+        },
+        (error) => {
+          console.error('Error fetching favorite movies:', error);
+        }
+      );
+    } else {
+      console.warn('Username is not available.');
+    }
   }
 
   /**
@@ -98,28 +137,36 @@ export class MovieCardComponent implements OnInit {
    * @param id of movie, type: string
    */
   addToFavorites(id: string): void {
-    this.fetchApiData.addFavoriteMovie(id).subscribe(
-      () => {
-        console.log('Movie added to favorites');
-        this.snackbar.open('Added to favorites!', 'OK', {
-          duration: 2000,
-        });
-      },
-      (error) => {
-        console.error(error);
-        this.snackbar.open(error, 'OK', {
-          duration: 2000,
-        });
-      }
-    );
+    const username = localStorage.getItem('Username');
+
+    if (username) {
+      this.fetchApiData.addFavoriteMovie(id).subscribe(
+        () => {
+          this.favoriteStatus[id] = true;
+          this.snackbar.open('Added to favorites!', 'OK', {
+            duration: 2000,
+          });
+        },
+        (error) => {
+          console.error(error);
+          this.snackbar.open(error, 'OK', {
+            duration: 2000,
+          });
+        }
+      );
+    } else {
+      console.warn('Username is not available.');
+    }
   }
 
   removeFromFavorites(id: string): void {
-    this.fetchApiData.deleteFavoriteMovie(id).subscribe((resp: any) => {
+    const username = localStorage.getItem('Username');
+
+    this.fetchApiData.deleteFavoriteMovie(id).subscribe(() => {
+      this.favoriteStatus[id] = false; // Update favoriteStatus when movie is removed
       this.snackbar.open('Removed from favorites!', 'OK', {
         duration: 2000,
       });
-      return this.ngOnInit();
     });
   }
 
