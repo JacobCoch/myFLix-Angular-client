@@ -193,7 +193,7 @@ export class FetchApiDataService {
    * @param {string} movieId
    * @returns  an Observable of the API call
    */
-  addFavoriteMovie(movieId: string): Observable<any> {
+  addFavoriteMovie(id: string): Observable<any> {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const headers = new HttpHeaders({
@@ -202,11 +202,7 @@ export class FetchApiDataService {
 
     if (user) {
       return this.http
-        .post(
-          apiUrl + 'users/' + user.Username + '/' + movieId,
-          {},
-          { headers }
-        )
+        .post(apiUrl + 'users/' + user.Username + '/' + id, {}, { headers })
         .pipe(catchError(this.handleError));
     } else {
       return of(null);
@@ -215,10 +211,10 @@ export class FetchApiDataService {
 
   /**
    * @method deleteFavoriteMovie
-   * @param {string} movieId
+   * @param {string} id
    * @returns  an Observable of the API call
    */
-  deleteFavoriteMovie(movieId: string): Observable<any> {
+  deleteFavoriteMovie(id: string): Observable<any> {
     const username = localStorage.getItem('Username');
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -227,7 +223,7 @@ export class FetchApiDataService {
 
     if (username) {
       return this.http
-        .delete(apiUrl + 'users/' + username + '/' + movieId, { headers })
+        .delete(apiUrl + 'users/' + username + '/' + id, { headers })
         .pipe(catchError(this.handleError));
     } else {
       return of(null);
