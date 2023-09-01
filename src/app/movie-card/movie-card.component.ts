@@ -77,11 +77,11 @@ export class MovieCardComponent implements OnInit {
 
   /**
    * Determines if a movie id is in the user's favorites list or not
-   * @param {string} id of movie
+   * @param {string} movieId of movie
    * @returns boolean showing movie id is true or false
    */
-  isFavorite(id: string): boolean {
-    return this.favoriteStatus[id] === true;
+  isFavorite(movieId: string): boolean {
+    return this.favoriteStatus[movieId] === true;
   }
 
   /**
@@ -98,17 +98,17 @@ export class MovieCardComponent implements OnInit {
   /**
    * Adds movie to user's favorite movies list using the API call fetchApiData.addFavMovie()
    * @function addToFavorites
-   * @param {string} id of movie
+   * @param {string} movieId of movie
    * @returns favoriteStatus object
    * @method updateFavoriteStatus
    */
-  addToFavorites(id: string): void {
+  addToFavorites(movieId: string): void {
     const username = localStorage.getItem('Username');
 
     if (username) {
-      this.fetchApiData.addFavoriteMovie(id).subscribe({
+      this.fetchApiData.addFavoriteMovie(movieId).subscribe({
         next: () => {
-          this.favoriteStatus[id] = true;
+          this.favoriteStatus[movieId] = true;
           this.snackbar.open('Added to favorites!', 'OK', {
             duration: 2000,
           });
@@ -131,16 +131,17 @@ export class MovieCardComponent implements OnInit {
   /**
    * Removes movie from user's favorite movies list using the API call fetchApiData.deleteFavMovie()
    * @function removeFromFavorites
-   * @param {string} id of movie
+   * @param {string} movieId of movie
    * @returns favoriteStatus object
    * @method updateFavoriteStatus
    */
-  removeFromFavorites(id: string): void {
+  removeFromFavorites(movieId: string): void {
     const username = localStorage.getItem('Username');
+
     if (username) {
-      this.fetchApiData.deleteFavoriteMovie(id).subscribe({
+      this.fetchApiData.deleteFavoriteMovie(movieId).subscribe({
         next: () => {
-          this.favoriteStatus[id] = false;
+          this.favoriteStatus[movieId] = false;
           this.snackbar.open('Removed from favorites!', 'OK', {
             duration: 2000,
           });
