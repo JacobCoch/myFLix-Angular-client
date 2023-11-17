@@ -2,6 +2,7 @@
 
 🎬 Welcome to the documentation for the **myFlix** Angular app! This application is designed to provide users with an engaging movie experience, allowing them to explore information about movies, directors, and genres. The app is built using Angular.
 
+[Deployed App](https://jarjardinks.github.io/myFLix-Angular-client/)
 ## Table of Contents
 
 - [myFlix Angular App Readme](#myflix-angular-app-readme)
